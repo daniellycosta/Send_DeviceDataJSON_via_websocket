@@ -49,11 +49,11 @@ String getHoraAtual() {
   return payload;
 }
 
-void setJson(DeviceData d, char* json){
+void setJson(DeviceData d){
 
   JsonObject& clientData = jsonBuffer.createObject();
 
-  clientData["dispositiveId"] = device.getId();
+  clientData["deviceId"] = device.getId();
   clientData["ip"] = device.getDeviceIp();
   clientData["tag"] = device.getTag();
   clientData["communicationType"] =device.getCommType();
@@ -69,7 +69,7 @@ void setJson(DeviceData d, char* json){
 }
 
 void sendStatus(const char * payload, size_t length){
-   setJson(device, devStatus);
+   setJson(device);
   socket.emit("on_status", devStatus);
 }
 
@@ -104,9 +104,9 @@ void setup(void) {
   device.setDeadBand(0.3);
 
   socket.on("status", sendStatus);
-  socket.on("liga",);
-  socket.on("desliga");
-  socket.on("configuracao")
+  //socket.on("on",);
+  //socket.on("off");
+  //socket.on("configuration")
 
 }
 
