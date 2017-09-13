@@ -11,7 +11,7 @@ void DeviceData::setDescription(String _description){
   description =_description;
 }
 void DeviceData::setDeviceIp(String _deviceIp){
-  deviceIp = deviceIp;
+  deviceIp = _deviceIp;
 }
 void DeviceData::setDateTime(String _dateTime){
   dateTime = _dateTime;
@@ -70,7 +70,7 @@ String DeviceData::getState(void){
   if(isOn)
     return "On";
   else
-  return "Off";
+    return "Off";
 }
 
 int DeviceData::getTimeout(void){
