@@ -21,11 +21,10 @@
 
 SocketIoClient socket;
 WiFiManager wifi;
-String ipStr;
-String dataAtual;
-
 DeviceData device;
 
+String ipStr;
+String dataAtual;
 char devStatus[400];
 
 StaticJsonBuffer<400> jsonBuffer;
@@ -33,10 +32,6 @@ StaticJsonBuffer<400> jsonBuffer;
 //===================================================================================
 // FUNCTIONS
 //===================================================================================
-void imprime(const char* payload, size_t tam) {
-  Serial.println(payload);
-}
-
 String getHoraAtual() {
   HTTPClient http;
   http.begin(GETDATAHORA);
@@ -85,9 +80,8 @@ void setup(void) {
 
   IPAddress ip = WiFi.localIP();
   ipStr = String(ip[0]) + "." + String(ip[1]) + "." + String(ip[2]) + "." + String(ip[3]);
-
+  
   dataAtual = getHoraAtual();
-
 
 //EXEMPLO
   device.setId("ESP001");
