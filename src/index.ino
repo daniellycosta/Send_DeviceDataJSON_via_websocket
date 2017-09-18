@@ -43,7 +43,7 @@ void setup() {
       Serial.println("connection failed");
       return;
     } else if (socket.connected()) {
-      Serial.println("\n\n\n\n\nConectou no servidor\n\n\n");
+      Serial.println("\n\n connection device-server established \n\n");
     }
 
     IPAddress ip = WiFi.localIP();
