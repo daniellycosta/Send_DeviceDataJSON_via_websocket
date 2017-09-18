@@ -64,7 +64,7 @@ String DeviceData::getCommType(void){
   if(isSynchronous)
     return "Synchronous";
   else
-  return "asynchronous";
+  return "Asynchronous";
 }
 String DeviceData::getState(void){
   if(isOn)

@@ -65,11 +65,10 @@ void setup() {
     device.setConsumption(500.255);
     device.setDeadBand(0.3);
 
-    socket.emit("valu", "OOOII");
-    socket.on("sla", sendStatus);
+    socket.on("status", sendStatus);
     socket.on("on", turnOn);
     socket.on("off", turnOff);
-    //socket.on("configuration", configuration);
+    socket.on("configuration", configuration);
 }
 
 void loop() {
@@ -107,6 +106,7 @@ String setJson(DeviceData _device){
   clientData["consumption"] = _device.getConsumption();
   clientData["dateTime"] = _device.getDateTime();
   clientData["actionAdress"] = _device.getActionAdress();
+  clientData["deadBand"] = _device.getDeadBand();
 
   clientData.printTo(devStatus);
   Serial.println(devStatus);
@@ -114,11 +114,11 @@ String setJson(DeviceData _device){
 }
 
 void sendStatus(String state){
-  Serial.println(state);
   Serial.println();
   socket.emit("on_status", setJson(device));
   Serial.println("Enviou JSON!");
 }
+//funcoes On/Off - só alteram o estado se este estiver diferente
 void turnOn(String status){
   if(device.getState() == "Off"){
   device.setState(1);
@@ -133,6 +133,25 @@ void turnOff(String status){
   Serial.println("Desligou!");
   }
 }
-/*void configuration(String status){
-
-}*/
+void configuration(String status){
+  //Criando Json para receber as conf. enviadas pelo server
+  StaticJsonBuffer<400> jsonBuffer;
+  JsonObject& newConfig = jsonBuffer.parseObject(status);
+//testanto se o recebimento do json do server deu certo
+  if (!newConfig.success()) {
+    Serial.println("parseObject() failed");
+    return;
+  }
+//setando novas configurações
+  device.setTag(newConfig["tag"]);
+  device.setDescription(newConfig["description"]);
+  device.setTimeout(newConfig["timeout"]);
+  device.setIntensity(newConfig["intensity"]);
+  device.setDeadBand(newConfig["deadBand"]);
+  if(newConfig["communicationType"] == "Synchronous")
+    device.setCommType(1);
+  else
+    device.setCommType(0);
+//enviando status atual
+  socket.emit("on_status", setJson(device));
+}
