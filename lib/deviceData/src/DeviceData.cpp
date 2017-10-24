@@ -62,15 +62,15 @@ String DeviceData::getActionAdress(void){
 }
 String DeviceData::getCommType(void){
   if(isSynchronous)
-    return "Synchronous";
+    return "synchronous";
   else
-  return "Asynchronous";
+  return "asynchronous";
 }
 String DeviceData::getState(void){
   if(isOn)
-    return "On";
+    return "on";
   else
-    return "Off";
+    return "off";
 }
 
 int DeviceData::getTimeout(void){
