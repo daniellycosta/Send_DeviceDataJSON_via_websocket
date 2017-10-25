@@ -58,7 +58,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // Length of static data buffers
-#define DATA_BUFFER_LEN 120
+//#define DATA_BUFFER_LEN 120
+#define DATA_BUFFER_LEN 500
 #define SID_LEN 24
 
 // prototype for 'on' handlers

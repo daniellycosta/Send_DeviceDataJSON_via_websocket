@@ -11,7 +11,7 @@
 
 //DEFINES
 //#define HOST "10.7.227.77" //PC Lab
-#define HOST "192.168.0.113"
+#define HOST "192.168.0.110"
 //#define HOST "192.168.0.102" //ESP servidor
 #define PORT 3001 // porta para envio
 #define GETDATAHORA "http://api.saiot.ect.ufrn.br/v1/history/data-hora"
@@ -43,7 +43,6 @@ void setup() {
   wifi.autoConnect();
   Serial.println(WiFi.SSID());
 
-delay(500);
   if (!socket.connect(HOST, PORT)) {
     Serial.println("connection device-server failed");
     return;
@@ -128,7 +127,7 @@ void sendStatus(String state){
 }
 //funcoes On/Off - só alteram o estado se este estiver diferente
 void turnOn(String status){
-  if(device.getState() == "Off"){
+  if(device.getState() == "off"){
     device.setState(1);
     socket.emit("onStatus", setJson(device));
     Serial.println("Ligou!");
@@ -138,7 +137,7 @@ void turnOn(String status){
   }
 }
 void turnOff(String status){
-  if(device.getState() == "On"){
+  if(device.getState() == "on"){
     device.setState(0);
     socket.emit("onStatus", setJson(device));
     Serial.println("Desligou!");
@@ -149,8 +148,15 @@ void turnOff(String status){
 }
 void configuration(String status){
   //Teste de recebimento de dados do servidor
-  Serial.print("Recebido do Server: ");
+  Serial.print("[DEBUG] Recebido do Server: ");
   Serial.println(status);
+  Serial.println();
+
+  // Retirando escapes
+  status.replace('\\\"', '\"');
+  Serial.print("[DEBUG] String Tratada: ");
+  Serial.println(status);
+  Serial.println();
 
   //Criando Json para receber as conf. enviadas pelo server
   StaticJsonBuffer<400> jsonBuffer;
@@ -159,8 +165,9 @@ void configuration(String status){
   //testanto se o recebimento do json do server deu certo
   String dados;
   newConfig.printTo(dados);
-  Serial.print("Parse do Server: ");
+  Serial.print("[DEBUG] Parse do Server: ");
   Serial.println(dados);
+  Serial.println();
 
   if (!newConfig.success()) {
     Serial.println("parseObject() failed");
@@ -172,7 +179,7 @@ void configuration(String status){
   device.setTimeout(newConfig["timeout"]);
   device.setIntensity(newConfig["intensity"]);
   device.setDeadBand(newConfig["deadBand"]);
-  if(newConfig["communicationType"] == "synchronous")
+   if(newConfig["communicationType"] == "synchronous")
     device.setCommType(1);
   else
     device.setCommType(0);
