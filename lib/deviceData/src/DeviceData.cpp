@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <ESP8266HTTPClient.h>
 #include "DeviceData.h"
 
 void DeviceData::setId(String _id){
@@ -13,9 +14,18 @@ void DeviceData::setDescription(String _description){
 void DeviceData::setDeviceIp(String _deviceIp){
   deviceIp = _deviceIp;
 }
-void DeviceData::setDateTime(String _dateTime){
-  dateTime = _dateTime;
+void DeviceData::setDateTime(){
+  HTTPClient http;
+  http.begin(F("http://api.saiot.ect.ufrn.br/v1/history/data-hora"));
+  int httpCode = http.GET(); //Retorna o código http, caso não conecte irá retornar -1
+  String payload = http.getString();
+  http.end();
+  if (httpCode != 200) {
+    dateTime = "0";
+  }
+  dateTime = payload;
 }
+
 void DeviceData::setActionAdress(String _actionAdress){
   actionAdress = _actionAdress;
 }

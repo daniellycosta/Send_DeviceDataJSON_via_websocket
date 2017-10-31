@@ -11,12 +11,10 @@
 
 //DEFINES
 //#define HOST "10.7.227.77" //PC Lab
-#define HOST "192.168.0.110"
-//#define HOST "192.168.0.102" //ESP servidor
+//#define HOST "192.168.0.110"
+#define HOST "192.168.0.113" //ESP servidor
 #define PORT 3001 // porta para envio
-#define GETDATAHORA "http://api.saiot.ect.ufrn.br/v1/history/data-hora"
 
-String getHoraAtual(void);
 String setJson(DeviceData _device);
 void sendStatus(String status);
 void turnOn(String status);
@@ -33,7 +31,7 @@ extern String Rname;
 extern String Rcontent;
 
 String ipStr;
-String dataAtual;
+//String dataAtual;
 
 void setup() {
   Serial.begin(115200);
@@ -43,11 +41,16 @@ void setup() {
   wifi.autoConnect();
   Serial.println(WiFi.SSID());
 
+  socket.on("status", sendStatus);
+  socket.on("on", turnOn);
+  socket.on("desl", turnOff);
+  socket.on("config", configuration);
+
   if (!socket.connect(HOST, PORT)) {
-    Serial.println("connection device-server failed");
+    Serial.println(F("connection device-server failed"));
     return;
   } else if (socket.connected()) {
-    Serial.println("\n\n connection device-server established \n\n");
+    Serial.println(F("\n\n connection device-server established \n\n"));
     //Serial.println("mandando msg pro server");
     //socket.emit("webSocketEvent", "cliente conectado");
   }
@@ -55,14 +58,12 @@ void setup() {
   IPAddress ip = WiFi.localIP();
   ipStr = String(ip[0]) + "." + String(ip[1]) + "." + String(ip[2]) + "." + String(ip[3]);
 
-  dataAtual = getHoraAtual();
-
   //EXEMPLO
   device.setId("ESP001");
   device.setTag("LAMPADA_LAB");
   device.setDescription("Lampada que se encontra no lab 402(LII)");
   device.setDeviceIp(ipStr);
-  device.setDateTime(dataAtual);
+  device.setDateTime();
   device.setActionAdress("rota/postar/dados");
   device.setCommType(1); //1 - síncrona, 0 - assíncrona
   device.setState(1); //1 - ON, 0- OFF
@@ -71,10 +72,6 @@ void setup() {
   device.setConsumption(500.255);
   device.setDeadBand(0.3);
 
-  socket.on("status", sendStatus);
-  socket.on("on", turnOn);
-  socket.on("desl", turnOff);
-  socket.on("config", configuration);
 }
 
 void loop() {
@@ -82,17 +79,17 @@ void loop() {
 }
 
 //FUNCTIONS
-String getHoraAtual() {
-  HTTPClient http;
-  http.begin(GETDATAHORA);
-  int httpCode = http.GET(); //Retorna o código http, caso não conecte irá retornar -1
-  String payload = http.getString();
-  http.end();
-  if (httpCode != 200) {
-    return "0";
-  }
-  return payload;
-}
+// String getHoraAtual() {
+//   HTTPClient http;
+//   http.begin(GETDATAHORA);
+//   int httpCode = http.GET(); //Retorna o código http, caso não conecte irá retornar -1
+//   String payload = http.getString();
+//   http.end();
+//   if (httpCode != 200) {
+//     return "0";
+//   }
+//   return payload;
+// }
 
 String setJson(DeviceData _device){
 
@@ -120,17 +117,17 @@ String setJson(DeviceData _device){
 }
 
 void sendStatus(String state){
-  Serial.println("STATUS");
+  Serial.println(F("STATUS"));
   Serial.println();
   socket.emit("onStatus", setJson(device));
-  Serial.println("Enviou JSON!");
+  Serial.println(F("Enviou JSON!"));
 }
 //funcoes On/Off - só alteram o estado se este estiver diferente
 void turnOn(String status){
   if(device.getState() == "off"){
     device.setState(1);
     socket.emit("onStatus", setJson(device));
-    Serial.println("Ligou!");
+    Serial.println(F("Ligou!"));
   }
   else{
     socket.emit("onStatus", setJson(device));
@@ -140,7 +137,7 @@ void turnOff(String status){
   if(device.getState() == "on"){
     device.setState(0);
     socket.emit("onStatus", setJson(device));
-    Serial.println("Desligou!");
+    Serial.println(F("Desligou!"));
   }
   else{
     socket.emit("onStatus", setJson(device));
@@ -148,13 +145,10 @@ void turnOff(String status){
 }
 void configuration(String status){
   //Teste de recebimento de dados do servidor
-  Serial.print("[DEBUG] Recebido do Server: ");
+  Serial.print(F("[DEBUG] Recebido do Server: "));
   Serial.println(status);
+  status.replace("\\\"", "\"");
   Serial.println();
-
-  // Retirando escapes
-  status.replace('\\\"', '\"');
-  Serial.print("[DEBUG] String Tratada: ");
   Serial.println(status);
   Serial.println();
 
@@ -165,12 +159,12 @@ void configuration(String status){
   //testanto se o recebimento do json do server deu certo
   String dados;
   newConfig.printTo(dados);
-  Serial.print("[DEBUG] Parse do Server: ");
+  Serial.print(F("[DEBUG] Parse do Server: "));
   Serial.println(dados);
   Serial.println();
 
   if (!newConfig.success()) {
-    Serial.println("parseObject() failed");
+    Serial.println(F("parseObject() failed"));
     return;
   }
   //setando novas configurações

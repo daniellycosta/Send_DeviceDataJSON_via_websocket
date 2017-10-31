@@ -16,7 +16,7 @@ public:
   void setTag(String _tag);
   void setDescription(String _description);
   void setDeviceIp(String _deviceIp);
-  void setDateTime(String _dateTime);
+  void setDateTime();
   void setActionAdress(String _actionAdress);
 
   void setCommType(bool _isSynchronous);
