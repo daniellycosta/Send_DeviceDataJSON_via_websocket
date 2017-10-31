@@ -51,8 +51,7 @@ void setup() {
     return;
   } else if (socket.connected()) {
     Serial.println(F("\n\n connection device-server established \n\n"));
-    //Serial.println("mandando msg pro server");
-    //socket.emit("webSocketEvent", "cliente conectado");
+
   }
   Serial.flush();
   IPAddress ip = WiFi.localIP();
@@ -78,20 +77,8 @@ void loop() {
   socket.monitor();
 }
 
-//FUNCTIONS
-// String getHoraAtual() {
-//   HTTPClient http;
-//   http.begin(GETDATAHORA);
-//   int httpCode = http.GET(); //Retorna o código http, caso não conecte irá retornar -1
-//   String payload = http.getString();
-//   http.end();
-//   if (httpCode != 200) {
-//     return "0";
-//   }
-//   return payload;
-// }
 
-String setJson(DeviceData _device){
+String getJson(DeviceData _device){
 
   //String devStatus;
   char devStatus[400];
@@ -119,28 +106,28 @@ String setJson(DeviceData _device){
 void sendStatus(String state){
   Serial.println(F("STATUS"));
   Serial.println();
-  socket.emit("onStatus", setJson(device));
+  socket.emit("onStatus", getJson(device));
   Serial.println(F("Enviou JSON!"));
 }
 //funcoes On/Off - só alteram o estado se este estiver diferente
 void turnOn(String status){
   if(device.getState() == "off"){
     device.setState(1);
-    socket.emit("onStatus", setJson(device));
+    socket.emit("onStatus", getJson(device));
     Serial.println(F("Ligou!"));
   }
   else{
-    socket.emit("onStatus", setJson(device));
+    socket.emit("onStatus", getJson(device));
   }
 }
 void turnOff(String status){
   if(device.getState() == "on"){
     device.setState(0);
-    socket.emit("onStatus", setJson(device));
+    socket.emit("onStatus", getJson(device));
     Serial.println(F("Desligou!"));
   }
   else{
-    socket.emit("onStatus", setJson(device));
+    socket.emit("onStatus", getJson(device));
   }
 }
 void configuration(String status){
@@ -173,10 +160,10 @@ void configuration(String status){
   device.setTimeout(newConfig["timeout"]);
   device.setIntensity(newConfig["intensity"]);
   device.setDeadBand(newConfig["deadBand"]);
-   if(newConfig["communicationType"] == "synchronous")
-    device.setCommType(1);
-  else
-    device.setCommType(0);
+  //  if(newConfig["communicationType"] == "synchronous")
+  //   device.setCommType(1);
+  // else
+  //   device.setCommType(0);
   //enviando status atual
-  socket.emit("onStatus", setJson(device));
+  socket.emit("onStatus", getJson(device));
 }
