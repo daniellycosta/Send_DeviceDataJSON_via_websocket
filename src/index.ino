@@ -11,9 +11,9 @@
 
 //DEFINES
 //#define HOST "10.7.227.77" //PC Lab
-//#define HOST "192.168.0.110"
-#define HOST "192.168.0.113" //ESP servidor
-#define PORT 3001 // porta para envio
+#define HOST "192.168.0.110"
+//#define HOST "192.168.0.113" //ESP servidor
+#define PORT 3000 // porta para envio
 
 String setJson(DeviceData _device);
 void sendStatus(String status);
@@ -51,7 +51,6 @@ void setup() {
     return;
   } else if (socket.connected()) {
     Serial.println(F("\n\n connection device-server established \n\n"));
-
   }
   Serial.flush();
   IPAddress ip = WiFi.localIP();
@@ -160,10 +159,10 @@ void configuration(String status){
   device.setTimeout(newConfig["timeout"]);
   device.setIntensity(newConfig["intensity"]);
   device.setDeadBand(newConfig["deadBand"]);
-  //  if(newConfig["communicationType"] == "synchronous")
-  //   device.setCommType(1);
-  // else
-  //   device.setCommType(0);
+   if(newConfig["communicationType"] == "synchronous")
+    device.setCommType(1);
+  else
+    device.setCommType(0);
   //enviando status atual
   socket.emit("onStatus", getJson(device));
 }

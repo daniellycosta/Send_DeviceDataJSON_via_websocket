@@ -35,7 +35,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include "Arduino.h"
 
 #ifndef ioDebug
-#define ioDebug false
+#define ioDebug true
 #endif
 
 #ifdef W5100
