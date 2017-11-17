@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <ESP8266HTTPClient.h>
 #include "DeviceData.h"
 
 void DeviceData::setId(String _id){
