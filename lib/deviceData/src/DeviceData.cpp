@@ -30,16 +30,9 @@ void DeviceData::setTimeout(int _timeout){
   timeout = _timeout;
 }
 
-void DeviceData::setIntensity(float _intensity){
-  intensity = _intensity;
-}
-void DeviceData::setConsumption(float _consumption){
-  consumption = _consumption;
-}
 void DeviceData::setDeadBand(float _deadBand){
   deadBand = _deadBand;
 }
-
 
 String DeviceData::getId(void){
   return id;
@@ -85,12 +78,6 @@ int DeviceData::getTimeout(void){
   return timeout;
 }
 
-float DeviceData::getIntensity(void){
-  return intensity;
-}
-float DeviceData::getConsumption(void){
-  return consumption;
-}
 float DeviceData::getDeadBand(void){
   return deadBand;
 }

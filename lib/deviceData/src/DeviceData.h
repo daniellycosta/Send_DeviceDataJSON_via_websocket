@@ -8,7 +8,7 @@ private:
   String id, tag, description,deviceIp,dateTime,actionAdress;
   bool isSynchronous, isOn;
   int timeout;
-  double intensity, consumption, deadBand;
+  double deadBand;
 
 public:
 
@@ -22,9 +22,6 @@ public:
   void setState(bool _isOn);
 
   void setTimeout(int _timeout);
-
-  void setIntensity(float _intensity);
-  void setConsumption(float _consumption);
   void setDeadBand(float _deadBand);
 
 
@@ -41,9 +38,6 @@ public:
   String getState(void);
 
   int getTimeout(void);
-
-  float getIntensity(void);
-  float getConsumption(void);
   float getDeadBand(void);
 };
 

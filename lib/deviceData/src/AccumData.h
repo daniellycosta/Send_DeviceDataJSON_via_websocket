@@ -9,6 +9,8 @@ private:
 double consumption;
 
 public:
+  void setConsumption(float _consumption);
+  float getConsumption(void);
 };
 
 #endif
