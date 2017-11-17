@@ -2,7 +2,6 @@
 #define IntensityDevice_h
 
 #include <Arduino.h>
-#include "DeviceData.h"
 #include "AccumData.h"
 
 class IntensityDevice: public AccumData{

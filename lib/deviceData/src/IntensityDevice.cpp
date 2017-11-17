@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "DeviceData.h"
 #include "IntensityDevice.h"
 
 void IntensityDevice::setIntensity(float _intensity){

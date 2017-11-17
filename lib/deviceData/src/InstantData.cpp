@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "DeviceData.h"
 #include "InstantData.h"
 
 template <class Type> void InstantData<Type>::setValue(Type _value){
